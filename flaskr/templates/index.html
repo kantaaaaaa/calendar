@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>カレンダー</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a{
+            font-size: 30px;
+        }
+    </style>
+</head>
+<body>
+    <h2>{{ year }}年 {{ month }}月   サッカーカレンダー</h2>
+    <a href="{{ url_for('index', year=year, month=month-1) }}">前月</a>
+    <a href="{{ url_for('index', year=year, month=month+1) }}">次月</a>
+    <form action="/" method="GET">
+        <label for="team_name">チーム名：</label>
+        <input type="text" id="team_name" name="team_name">
+        <button type="submit">送信</button>
+    </form>
+    <a>{{team_name}}の日程</a>
+    <table>
+        <thead>
+            <tr>
+                <th>月</th>
+                <th>火</th>
+                <th>水</th>
+                <th>木</th>
+                <th>金</th>
+                <th>土</th>
+                <th>日</th>
+            </tr>
+        </thead>
+        <tbody>
+    {% for week in cal %}
+    <tr>
+        {% for day in week %}
+            {% if day == 0 %}
+                <td></td>
+            {% else %}
+                <td>{{ '%2s' % day }}日<br>
+                    {% for count in range(date_list|length) %}
+                        {% if day == date_list[count] %}
+                            
+                                {{ scraped_data[count][4] }}<br>
+                                vs 
+                                {% if team_name == scraped_data[count][2] %}
+                                    {{ scraped_data[count][3] }}
+                                {% else %}
+                                {{ scraped_data[count][2] }}
+                                {% endif %}  
+                        {% endif %}
+                    {% endfor %}
+                </td>
+            {% endif %}
+        {% endfor %}
+    </tr>
+    {% endfor %}
+
+        </tbody>
+    </table>
+</body>
+</html>
